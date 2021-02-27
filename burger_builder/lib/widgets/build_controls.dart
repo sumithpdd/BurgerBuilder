@@ -3,6 +3,8 @@ import 'package:burger_builder/models/ingredients_model.dart';
 import 'package:burger_builder/models/user_order_model.dart';
 import 'package:flutter/material.dart';
 
+import 'build_control.dart';
+
 class BuildControls extends StatefulWidget {
   BuildControls(
       {Key key,
@@ -59,7 +61,7 @@ class _BuildControlsState extends State<BuildControls> {
           Align(
             alignment: Alignment.bottomCenter,
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: totalPrice <= 0 ? null : () {},
               child: const Text('ORDER NOW', style: TextStyle(fontSize: 20)),
               color:
                   AppConstants.hexToColor(AppConstants.BUTTON_BACKGROUND_COLOR),
@@ -79,7 +81,15 @@ class _BuildControlsState extends State<BuildControls> {
         final userIngredient = widget.userOrderModel.userIngredients
             .singleWhere((ing) => ing.ingredient.name == ingredient.name,
                 orElse: () => null);
-        return Text("ingredients selection =   ${ingredient.label}");
+
+        final currentCount = userIngredient?.count ?? 0;
+
+        return BuildControl(
+          ingredient: ingredient,
+          currentValue: currentCount,
+          addHandler: widget.addHandler,
+          removeHandler: widget.removeHandler,
+        );
       }).toList(),
     );
   }
