@@ -1,5 +1,6 @@
 import 'package:burger_builder/helpers/app_constants.dart';
 import 'package:burger_builder/models/user_order_model.dart';
+import 'package:burger_builder/services/http_service.dart';
 import 'package:flutter/material.dart';
 
 class OrderSummary extends StatefulWidget {
@@ -108,7 +109,31 @@ class _OrderSummaryState extends State<OrderSummary> {
                         color: AppConstants.hexToColor(
                           AppConstants.BUTTON_COLOR_CONTINUE,
                         ),
-                        onPressed: () {}),
+                        onPressed: () async {
+                          setState(() {
+                            visible = true;
+                          });
+                          var orderid = await HttpService()
+                              .purchaseContinue(widget.userOrderModel);
+                          if (orderid.length > 0) {
+                            setState(() {
+                              widget.userOrderModel = new UserOrderModel(
+                                  customer: "Sumith",
+                                  userIngredients:
+                                      new List<UserSelectedIngredientModel>(),
+                                  totalPrice: 0.00);
+                            });
+                            SnackBar(
+                              behavior: SnackBarBehavior.floating,
+                              content: Text('order placed - ' + orderid),
+                            );
+                          }
+                          setState(() {
+                            visible = false;
+                          });
+                          Navigator.pop(context);
+                        },
+                      ),
               ],
             ),
           ],
