@@ -1,5 +1,8 @@
+import 'package:burger_builder/models/dummy_data.dart';
+import 'package:burger_builder/models/user_order_model.dart';
 import 'package:burger_builder/screens/burger.dart';
 import 'package:burger_builder/widgets/app_drawer.dart';
+import 'package:burger_builder/widgets/build_controls.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -9,6 +12,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   GlobalKey<ScaffoldState> _drawerKey = GlobalKey();
+
+  UserOrderModel userOrderModel = UserOrderModel(
+    customer: "sumith",
+    userIngredients: List<UserSelectedIngredientModel>(),
+    totalPrice: 0,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +55,11 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.white,
       body: Column(children: <Widget>[
         Burger(),
-        Text("Build Controls"),
+        BuildControls(
+            userOrderModel: userOrderModel,
+            addHandler: () {},
+            removeHandler: () {},
+            ingredients: dummyData),
       ]),
     );
   }
