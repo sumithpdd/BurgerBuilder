@@ -1,3 +1,4 @@
+import 'package:burger_builder/screens/burger.dart';
 import 'package:burger_builder/widgets/app_drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,10 @@ class _HomeState extends State<Home> {
       ),
       drawer: AppDrawer(),
       backgroundColor: Colors.white,
-      body: Container(),
+      body: Column(children: <Widget>[
+        Burger(),
+        Text("Build Controls"),
+      ]),
     );
   }
 }
