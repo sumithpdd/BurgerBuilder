@@ -2,6 +2,7 @@ import 'package:burger_builder/helpers/app_constants.dart';
 import 'package:burger_builder/models/dummy_data.dart';
 import 'package:burger_builder/models/ingredients_model.dart';
 import 'package:burger_builder/models/user_order_model.dart';
+import 'package:burger_builder/screens/order_summary.dart';
 import 'package:flutter/material.dart';
 
 import 'build_control.dart';
@@ -62,7 +63,21 @@ class _BuildControlsState extends State<BuildControls> {
           Align(
             alignment: Alignment.bottomCenter,
             child: RaisedButton(
-              onPressed: totalPrice <= 0 ? null : () {},
+              onPressed: totalPrice <= 0
+                  ? null
+                  : () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => Container(
+                          padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom,
+                          ),
+                          child: OrderSummary(
+                            userOrderModel: widget.userOrderModel,
+                          ),
+                        ),
+                      );
+                    },
               child: const Text('ORDER NOW', style: TextStyle(fontSize: 20)),
               color:
                   AppConstants.hexToColor(AppConstants.BUTTON_BACKGROUND_COLOR),
