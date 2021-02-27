@@ -1,3 +1,5 @@
+import 'package:burger_builder/models/dummy_data.dart';
+import 'package:burger_builder/widgets/burger_ingredient.dart';
 import 'package:flutter/material.dart';
 
 class Burger extends StatefulWidget {
@@ -8,6 +10,7 @@ class Burger extends StatefulWidget {
 }
 
 class _BurgerState extends State<Burger> {
+  List<Widget> ingredientsList = [];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -19,9 +22,12 @@ class _BurgerState extends State<Burger> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("bread-top"),
-                  Text("Ingredients"),
-                  Text("bread-bottom"),
+                  BurgerIngredient(type: "bread-top"),
+                  new ListView(
+                    shrinkWrap: true,
+                    children: transformedIngredients,
+                  ),
+                  BurgerIngredient(type: "bread-bottom"),
                 ],
               ),
             ],
@@ -29,5 +35,12 @@ class _BurgerState extends State<Burger> {
         ),
       ),
     );
+  }
+
+  get transformedIngredients {
+    for (var ingredient in dummyData) {
+      ingredientsList.add(BurgerIngredient(type: ingredient.name));
+    }
+    return ingredientsList;
   }
 }
