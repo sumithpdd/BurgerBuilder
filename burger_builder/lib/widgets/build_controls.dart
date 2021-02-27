@@ -1,4 +1,5 @@
 import 'package:burger_builder/helpers/app_constants.dart';
+import 'package:burger_builder/models/dummy_data.dart';
 import 'package:burger_builder/models/ingredients_model.dart';
 import 'package:burger_builder/models/user_order_model.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _BuildControlsState extends State<BuildControls> {
   Widget buttonBar() {
     return Column(
       children: widget.ingredients.map<Widget>((ingredient) {
-        final userIngredient = widget.userOrderModel.userIngredients
+        final userIngredient = widget.userOrderModel?.userIngredients
             .singleWhere((ing) => ing.ingredient.name == ingredient.name,
                 orElse: () => null);
 

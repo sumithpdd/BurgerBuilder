@@ -1,18 +1,22 @@
-import 'package:burger_builder/models/dummy_data.dart';
+import 'package:burger_builder/models/user_order_model.dart';
 import 'package:burger_builder/widgets/burger_ingredient.dart';
 import 'package:flutter/material.dart';
 
 class Burger extends StatefulWidget {
-  const Burger({Key key}) : super(key: key);
+  final UserOrderModel userOrderModel;
+
+  const Burger({Key key, this.userOrderModel}) : super(key: key);
 
   @override
   _BurgerState createState() => _BurgerState();
 }
 
 class _BurgerState extends State<Burger> {
-  List<Widget> ingredientsList = [];
   @override
   Widget build(BuildContext context) {
+    final userIngredients = widget.userOrderModel.userIngredients;
+    final emptyIngredients =
+        userIngredients == null || userIngredients.length == 0;
     return Container(
       child: Expanded(
         child: Padding(
@@ -23,10 +27,8 @@ class _BurgerState extends State<Burger> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   BurgerIngredient(type: "bread-top"),
-                  new ListView(
-                    shrinkWrap: true,
-                    children: transformedIngredients,
-                  ),
+                  if (emptyIngredients) EmptyIngredients(),
+                  ...transformedIngredients,
                   BurgerIngredient(type: "bread-bottom"),
                 ],
               ),
@@ -38,9 +40,37 @@ class _BurgerState extends State<Burger> {
   }
 
   get transformedIngredients {
-    for (var ingredient in dummyData) {
-      ingredientsList.add(BurgerIngredient(type: ingredient.name));
+    final userIngredients = widget.userOrderModel.userIngredients;
+    List<Widget> ingredientsList = [];
+    for (var selectedIngredient in userIngredients) {
+      for (var i = 0; i < selectedIngredient.count; i++) {
+        ingredientsList.add(
+          BurgerIngredient(type: selectedIngredient.ingredient.name),
+        );
+      }
     }
     return ingredientsList;
+  }
+}
+
+class EmptyIngredients extends StatelessWidget {
+  const EmptyIngredients({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: Text(
+          "Please start adding ingredients!",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }
