@@ -2,22 +2,16 @@ import 'package:burger_builder/helpers/app_constants.dart';
 import 'package:burger_builder/models/dummy_data.dart';
 import 'package:burger_builder/models/ingredients_model.dart';
 import 'package:burger_builder/models/user_order_model.dart';
+import 'package:burger_builder/providers/user_order_provider.dart';
 import 'package:burger_builder/screens/order_summary.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'build_control.dart';
 
 class BuildControls extends StatefulWidget {
-  BuildControls(
-      {Key key,
-      this.userOrderModel,
-      this.addHandler,
-      this.removeHandler,
-      this.ingredients})
-      : super(key: key);
-  final UserOrderModel userOrderModel;
-  final Function addHandler;
-  final Function removeHandler;
+  BuildControls({Key key, this.ingredients}) : super(key: key);
+
   final List<IngredientsModel> ingredients;
 
   @override
@@ -27,7 +21,9 @@ class BuildControls extends StatefulWidget {
 class _BuildControlsState extends State<BuildControls> {
   @override
   Widget build(BuildContext context) {
-    final totalPrice = widget.userOrderModel.totalPrice;
+    final totalPrice = Provider.of<UserOrderProvider>(context, listen: true)
+        .userOrderModel
+        .totalPrice;
     return Container(
       color:
           AppConstants.hexToColor(AppConstants.BUILD_CONTROLS_CONTAINER_COLOR),
@@ -72,9 +68,7 @@ class _BuildControlsState extends State<BuildControls> {
                           padding: EdgeInsets.only(
                             bottom: MediaQuery.of(context).viewInsets.bottom,
                           ),
-                          child: OrderSummary(
-                            userOrderModel: widget.userOrderModel,
-                          ),
+                          child: OrderSummary(),
                         ),
                       );
                     },
@@ -94,17 +88,18 @@ class _BuildControlsState extends State<BuildControls> {
   Widget buttonBar() {
     return Column(
       children: widget.ingredients.map<Widget>((ingredient) {
-        final userIngredient = widget.userOrderModel.userIngredients
-            .singleWhere((ing) => ing.ingredient.name == ingredient.name,
-                orElse: () => null);
+        final userIngredient =
+            Provider.of<UserOrderProvider>(context, listen: true)
+                .userOrderModel
+                ?.userIngredients
+                .singleWhere((ing) => ing.ingredient.name == ingredient.name,
+                    orElse: () => null);
 
         final currentCount = userIngredient?.count ?? 0;
 
         return BuildControl(
           ingredient: ingredient,
           currentValue: currentCount,
-          addHandler: widget.addHandler,
-          removeHandler: widget.removeHandler,
         );
       }).toList(),
     );

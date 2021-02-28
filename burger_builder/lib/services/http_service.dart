@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:burger_builder/models/dummy_data.dart';
 import 'package:burger_builder/models/ingredients_model.dart';
+import 'package:burger_builder/models/user_order_model.dart';
 import 'package:http/http.dart' as http;
 
 class HttpService {
@@ -24,5 +25,23 @@ class HttpService {
     return parsed
         .map<IngredientsModel>((json) => IngredientsModel.fromJson(json))
         .toList();
+  }
+
+  //post Order
+  Future<String> purchaseContinue(UserOrderModel userOrderModel) async {
+    var body = json.encode(userOrderModel);
+
+    final response = await http.post("$Url/orders.json", body: body);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 CREATED response,
+      // then parse the JSON.
+      print(response.body);
+      return response.body;
+    } else {
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Failed to create ');
+    }
   }
 }

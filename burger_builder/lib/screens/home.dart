@@ -73,57 +73,7 @@ class _HomeState extends State<Home> {
 
   Column mainView(data) {
     ingredients = data;
-    return Column(children: <Widget>[
-      Burger(
-        userOrderModel: userOrderModel,
-      ),
-      BuildControls(
-          userOrderModel: userOrderModel,
-          addHandler: _addIngredientHandler,
-          removeHandler: _removeIngredientHandler,
-          ingredients: ingredients)
-    ]);
-  }
-
-  _addIngredientHandler(String name) {
-    var ingredient = ingredients.singleWhere((ing) => ing.name == name);
-
-    final foundIngredient = userOrderModel.userIngredients.singleWhere(
-      (element) => element.ingredient.name == name,
-      orElse: () => null,
-    );
-    if (foundIngredient == null) {
-      setState(() {
-        userOrderModel.userIngredients.add(
-          UserSelectedIngredientModel(ingredient: ingredient, count: 1),
-        );
-      });
-    } else {
-      setState(() {
-        foundIngredient.count++;
-      });
-    }
-    setState(() {
-      userOrderModel.totalPrice = userOrderModel.totalPrice + ingredient.price;
-    });
-  }
-
-  _removeIngredientHandler(name) {
-    final ingredient = dummyData.singleWhere((ing) => ing.name == name);
-
-    final foundIngredient = userOrderModel.userIngredients.singleWhere(
-      (element) => element.ingredient.name == name,
-      orElse: () => null,
-    );
-    if (foundIngredient != null) {
-      setState(() {
-        foundIngredient.count--;
-      });
-    }
-    setState(() {
-      userOrderModel.totalPrice = userOrderModel.totalPrice - ingredient.price;
-      userOrderModel.userIngredients
-          .removeWhere((element) => element.count == 0);
-    });
+    return Column(
+        children: <Widget>[Burger(), BuildControls(ingredients: ingredients)]);
   }
 }

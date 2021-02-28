@@ -1,11 +1,11 @@
-import 'package:burger_builder/models/dummy_data.dart';
 import 'package:burger_builder/models/user_order_model.dart';
+import 'package:burger_builder/providers/user_order_provider.dart';
 import 'package:burger_builder/widgets/burger_ingredient.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Burger extends StatefulWidget {
-  const Burger({Key key, this.userOrderModel}) : super(key: key);
-  final UserOrderModel userOrderModel;
+  const Burger({Key key}) : super(key: key);
 
   @override
   _BurgerState createState() => _BurgerState();
@@ -14,9 +14,6 @@ class Burger extends StatefulWidget {
 class _BurgerState extends State<Burger> {
   @override
   Widget build(BuildContext context) {
-    final userIngredients = widget.userOrderModel.userIngredients;
-    final emptyIngredients =
-        userIngredients == null || userIngredients.length == 0;
     return Container(
       child: Expanded(
         child: Padding(
@@ -27,7 +24,9 @@ class _BurgerState extends State<Burger> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   BurgerIngredient(type: "bread-top"),
-                  if (emptyIngredients) EmptyIngredients(),
+                  if (Provider.of<UserOrderProvider>(context, listen: true)
+                      .isEmptyIngredients)
+                    EmptyIngredients(),
                   ...transformedIngredients,
                   BurgerIngredient(type: "bread-bottom"),
                 ],
@@ -40,9 +39,10 @@ class _BurgerState extends State<Burger> {
   }
 
   get transformedIngredients {
-    final userIngredients = widget.userOrderModel.userIngredients;
+    final myuserOrderModel =
+        Provider.of<UserOrderProvider>(context).userOrderModel;
     List<Widget> ingredientsList = [];
-    for (var selectedIngredient in userIngredients) {
+    for (var selectedIngredient in myuserOrderModel.userIngredients) {
       for (var i = 0; i < selectedIngredient.count; i++) {
         ingredientsList.add(
           BurgerIngredient(type: selectedIngredient.ingredient.name),
